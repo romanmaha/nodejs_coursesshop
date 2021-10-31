@@ -15,7 +15,7 @@ const authRoutes = require('./routes/auth');
 const varMiddleware = require('./middleware/variables');
 const userMiddleware = require('./middleware/user');
 const app = express();
-const MONGODB_URI = `mongodb+srv://romanmaha93:Education2020@cluster0.nzug7.mongodb.net/Courses`;
+const keys = require('./keys');
 
 const { allowInsecurePrototypeAccess } = require('@handlebars/allow-prototype-access');
 
@@ -24,6 +24,7 @@ const hbs = exphbs.create({
   defaultLayout: 'main',
   extname: 'hbs',
   handlebars: allowInsecurePrototypeAccess(Handlebars),
+  helpers: require('./utils/hbs-helpers'),
 });
 
 app.engine('hbs', hbs.engine);
@@ -32,7 +33,7 @@ app.set('views', 'views');
 
 const store = new MongoStore({
   collection: 'sessions',
-  uri: MONGODB_URI,
+  uri: keys.MONGODB_URI,
 });
 // app.use(async (req, res, next) => {
 //   try {
@@ -49,7 +50,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   session({
-    secret: 'some secret value',
+    secret: keys.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store,
@@ -71,7 +72,7 @@ const PORT = process.env.PORT || 3000;
 
 async function start() {
   try {
-    await mongoose.connect(MONGODB_URI, {
+    await mongoose.connect(keys.MONGODB_URI, {
       useNewUrlParser: true,
       useFindAndModify: false,
       useUnifiedTopology: true,

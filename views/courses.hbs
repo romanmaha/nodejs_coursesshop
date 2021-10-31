@@ -13,10 +13,14 @@
             <span class='card-title'>{{title}}</span>
             <p class='price'>{{price}}</p>
           </div>
+
           <div class='card-action actions'>
             <a href='/courses/{{id}}' target='_blank'>Открыть</a>
             {{#if @root.isAuth}}
-              <a href='/courses/{{id}}/edit?allow=true'>Редактировать</a>
+
+              {{#ifeq userId._id @root.userId}}
+                <a href='/courses/{{id}}/edit?allow=true'>Редактировать</a>
+              {{/ifeq}}
               <form action='/card/add' method='POST'>
                 <input type='hidden' name='id' value='{{id}}' />
                 <button type='submit' class='btn btn-primary'>Купить</button>
